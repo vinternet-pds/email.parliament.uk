@@ -7,7 +7,8 @@ const controller = {
     if(!errors.isEmpty()) {
       return res.render('index', { errors: errors.array(), PAGE_TITLE: 'Email subscriptions' })
     }
-    return res.render('index', { PAGE_TITLE: 'Email subscriptions' });
+    req.session.email = req.body.email;
+    return res.redirect('/thanks');
   },
   createValidator: [
     check('email').isEmail()

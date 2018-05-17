@@ -1,0 +1,24 @@
+extends layouts/master.pug
+
+block content
+  #content.section--primary(tabindex='0')
+    .container
+      .block--border__bottom
+        h1 You're nearly there...
+        p.lead We've just sent an email to
+          = ' '
+          strong #{session.email}
+          = ' to confirm you’d like to receive email updates from us.'
+        p.lead Please check your email to confirm your subscription.
+      p If you’ve entered the wrong email address, simply
+        = ' '
+        a(href='/') go back and type it again
+        = '.'
+      p If you haven't received the confirmation email, try checking your spam folder and if you still haven't been sent an email,
+        = ' '
+        a(href='mailto:support@mail.parliament.uk') contact support
+        = '.'
+      p Go to the
+        = ' '
+        a(href='https://www.parliament.uk') parliament.uk homepage
+        = '.'
