@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/ukparliament/email.parliament.uk/issues"
   },
-  "homepage": "https://github.com/ukparliament/email.parliament.uk#readme"
+  "homepage": "https://github.com/ukparliament/email.parliament.uk#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "parliamentuk-pugin": "git+https://github.com/ukparliament/parliament.uk-pugin.git#1.9.3",
+    "pug": "^2.0.3"
+  }
 }

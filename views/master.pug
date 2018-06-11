@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')
+  head
+    title= title
+    meta(content='IE=edge', http-equiv='X-UA-Compatible')
+    meta(content='width=device-width, initial-scale=1.0', name='viewport')
+    link(href='https://static.parliament.uk/assets-public/favicon.ico', rel='shortcut icon', type='image/x-icon')
+    link(href=`https://static.parliament.uk/pugin/${PUGIN_VERSION}/stylesheets/main.css`, rel='stylesheet')
+  body
+    header
+      .container
+        a.uk_parliament(href='/', aria-label='UK Parliament')
+          include ../node_modules/parliamentuk-pugin/src/icons/uk-parliament.svg
+    main
+      block content
+    footer
+      .container
+        h2.logo UK Parliament
+        ul.list
+          li
+            a(href='http://www.parliament.uk') Current Parliament.uk website
+          li
+            a(href='https://beta.parliament.uk/meta/cookie-policy') Cookie Policy
+          li
+            a(href='https://www.parliament.uk/site-information/data-protection/data-protection-and-privacy-policy/') Data protection and privacy policy
