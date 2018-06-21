@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/ukparliament/email.parliament.uk#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "express-validator": "^5.2.0",
     "parliamentuk-pugin": "git+https://github.com/ukparliament/parliament.uk-pugin.git#1.9.3",
     "pug": "^2.0.3"
   }
