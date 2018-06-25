@@ -3,3 +3,4 @@ npm-debug.log
 .gitignore
 *.md
 aws_ecs
+Makefile
