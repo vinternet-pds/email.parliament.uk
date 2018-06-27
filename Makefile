@@ -25,7 +25,7 @@ VERSION = 0.1.$(GO_PIPELINE_COUNTER)
 
 # ECS related variables used to build our image name
 # Cluster: list all clusters to update, separated by semicolons
-ECS_CLUSTER ?= ecs;ecs_green
+ECS_CLUSTER ?= ecs-apps
 AWS_REGION = eu-west-1
 
 # The name of our Docker image
