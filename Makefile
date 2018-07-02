@@ -1,4 +1,4 @@
-.PHONY: build run dev test push scan-image rmi deploy-ecs airbrake
+.PHONY: build run dev test push scan-image rmi deploy-ecs airbrake css
 
 ##
 # Makefile used to build, test and (locally) run the email.parliament.uk project.
@@ -69,3 +69,10 @@ rmi: # Remove local versions of our images.
 deploy-ecs: # Deploy our new Docker image onto an AWS cluster (Run in GoCD to deploy to various environments).
 	./aws_ecs/register-task-definition.sh $(APP_NAME)
 	./aws_ecs/update-services.sh "$(ECS_CLUSTER)" "$(APP_NAME)" "$(AWS_REGION)"
+
+# variables
+NODE_SASS=./node_modules/.bin/node-sass
+
+css: # Compile CSS override files for extraneous CSS needed in email.parliament.uk
+	@mkdir -p public/_css
+	@$(NODE_SASS) --output-style compressed -o public/_css src/stylesheets
