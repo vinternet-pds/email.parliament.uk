@@ -1,0 +1,32 @@
+extends ../layouts/master.pug
+
+block content
+  #content.section--primary(tabindex='0')
+    .container
+      h1
+        small Email preferences
+        span Manage your subscriptions
+        span.context Edit the email updates you get from us
+  section.section--wide
+    .container
+      ul.list--tab
+        li.active Your subscriptions
+        li
+          a(href='/topics') All available subscriptions
+  section.section--wide
+    .container.flex
+      if TOPICS.length
+        form(action='', method='post')
+          .flex.flex-justify
+            h2 Your subscriptions (#{TOPICS.length})
+            button(type="submit").btn--primary Unsubscribe
+          fieldset
+            ol.list--block
+              each val in TOPICS
+                li
+                  .list--details
+                    .input-group__verbose
+                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
+                      label(for=val.Code)= val.Name
+      else
+        p You aren’t currently subscribed to any emails.

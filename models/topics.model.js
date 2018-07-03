@@ -25,6 +25,17 @@ const topics = {
     }
 
     return allTopics;
+  },
+  getSubscribed: function() {
+    const subscribedTopics = [
+      {
+        'Name': 'Sample topic subscription',
+        'Code': 12345,
+        'Visibility': true
+      }
+    ];
+
+    return subscribedTopics;
   }
 };
 
