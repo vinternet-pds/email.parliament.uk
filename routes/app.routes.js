@@ -8,4 +8,6 @@ module.exports = function(app) {
   app.get('/thanks', signup_controller.read);
   app.get('/topics', topics_controller.read);
   app.post('/topics', topics_controller.create);
+  app.get('/topics/subscribed', topics_controller.read_subscribed);
+  app.post('/topics/subscribed', topics_controller.update_subscribed);
 }

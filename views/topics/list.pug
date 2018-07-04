@@ -1,4 +1,4 @@
-extends layouts/master.pug
+extends ../layouts/master.pug
 
 block content
   #content.section--primary(tabindex='0')
@@ -11,7 +11,7 @@ block content
     .container
       ul.list--tab
         li
-          a(href='#') Your subscriptions
+          a(href='/topics/subscribed') Your subscriptions
         li.active All available subscriptions
   section.section--wide
     .container.flex
