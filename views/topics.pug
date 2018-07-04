@@ -1,0 +1,55 @@
+extends layouts/master.pug
+
+block content
+  #content.section--primary(tabindex='0')
+    .container
+      h1
+        small Email preferences
+        span All available subscriptions
+        span.context Edit the email updates you get from us
+  section.section--wide
+    .container
+      ul.list--tab
+        li
+          a(href='#') Your subscriptions
+        li.active All available subscriptions
+  section.section--wide
+    .container.flex
+      .flex--1-4.categories
+        h2 Categories
+        ul
+          li
+            a(href='#newsletters').active Newsletters
+          li
+            a(href='#cu') Committee updates
+          li
+            a(href='#bu') Bill updates
+      .flex--3-4
+        form(action='', method='post')
+          h2#newsletters Newsletters
+          fieldset
+            ol.list--block
+              each val in TOPICS.newsletters
+                li
+                  .list--details
+                    .input-group__verbose
+                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
+                      label(for=val.Code)= val.Name
+          h2#cu Committee updates
+          fieldset
+            ol.list--block
+              each val in TOPICS.committee
+                li
+                  .list--details
+                    .input-group__verbose
+                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
+                      label(for=val.Code)= val.Name
+          h2#bu Bill updates
+          fieldset
+            ol.list--block
+              each val in TOPICS.bill
+                li
+                  .list--details
+                    .input-group__verbose
+                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
+                      label(for=val.Code)= val.Name

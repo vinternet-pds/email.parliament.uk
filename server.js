@@ -20,7 +20,7 @@ app.use(function(req, res, next) {
 app.set('view engine', 'pug');
 
 app.locals = {
-  PUGIN_VERSION: '1.10.0',
+  PUGIN_VERSION: '1.10.1',
   SITE_TITLE: 'UK Parliament'
 }
 
