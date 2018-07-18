@@ -1,26 +1,29 @@
-const bodyParser = require('body-parser');
-const express = require('express');
-const session = require('express-session');
-const app = express();
+const bodyParser = require('body-parser'),
+      express    = require('express'),
+      session    = require('express-session'),
+      app        = express();
 
-/* App setup */
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(session({
-  secret: 'random secret to set', // todo: set
-  resave: false,
-  saveUninitialized: true
-}));
+const middlewares = [
+  express.static('public'),
+  bodyParser.urlencoded({ extended: true }),
+  bodyParser.json(),
+  session({
+    secret: process.env.APP_SECRET,
+    resave: false,
+    saveUninitialized: true
+  }),
+  (req, res, next) => {
+    req.session.errors = [];
+    next();
+  }
+];
 
-app.use(function(req, res, next) {
-  next();
-});
+app.use(middlewares);
 
 app.set('view engine', 'pug');
 
 app.locals = {
-  PUGIN_VERSION: '1.10.1',
+  PUGIN_VERSION: '1.10.2',
   SITE_TITLE: 'UK Parliament'
 }
 
