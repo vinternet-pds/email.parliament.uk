@@ -37,6 +37,9 @@ CONTAINER_PORT = 3000
 # Host port used for mapping when running our Docker image.
 HOST_PORT = 80
 
+# variables
+NODE_SASS = ./node_modules/.bin/node-sass
+
 ##
 # MAKE TASKS
 #   Tasks used locally and within our build pipelines to build, test and run our Docker image.
@@ -70,9 +73,8 @@ deploy-ecs: # Deploy our new Docker image onto an AWS cluster (Run in GoCD to de
 	./aws_ecs/register-task-definition.sh $(APP_NAME)
 	./aws_ecs/update-services.sh "$(ECS_CLUSTER)" "$(APP_NAME)" "$(AWS_REGION)"
 
-# variables
-NODE_SASS=./node_modules/.bin/node-sass
+
 
 css: # Compile CSS override files for extraneous CSS needed in email.parliament.uk
-	@mkdir -p public/_css
-	@$(NODE_SASS) --output-style compressed -o public/_css src/stylesheets
+	mkdir -p public/_css
+	$(NODE_SASS) --output-style compressed -o public/_css src/stylesheets
