@@ -3,6 +3,9 @@ FROM node:8
 WORKDIR /app
 
 ENV NODE_SASS ./node_modules/.bin/node-sass
+ENV APP_SECRET $APP_SECRET 
+ENV MC_API_KEY $MC_API_KEY
+ENV MC_LIST_ID $MC_LIST_ID
 
 COPY package*.json /app/
 
