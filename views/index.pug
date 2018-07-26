@@ -9,8 +9,8 @@ block content
       form(action='', method='post')
         label(for='email')
           strong Email address
-        if session && session.errors
-          for error in session.errors
+        if sessionErrors
+          for error in sessionErrors
             p.message--error #{error.message}
         input#email(type='text', name='email', required, autocapitalize='off' autocorrect='off')
         button.btn--primary(type='submit') Sign up

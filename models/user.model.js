@@ -20,9 +20,9 @@ const user = {
   },
   authenticate(id) {
     const promise = new Promise((resolve, reject) => {
-      mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members?unique_email_id=${id}`).then(result => {
+      mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members?unique_email_id=${id}&fields=total_items,members.email_address,members.id`).then(result => {
         if(result.total_items === 1) {
-          return resolve('User exists');
+          return resolve(result.members[0]);
         } else {
           return reject('User does not exist');
         }
