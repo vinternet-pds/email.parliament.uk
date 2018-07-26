@@ -53,7 +53,7 @@ const controller = {
     if(!req.session.email) {
       return res.redirect('/');
     }
-    return res.render('thanks', { PAGE_TITLE: 'Thanks for signing up - Email subscriptions', session: req.session })
+    return res.render('thanks', { PAGE_TITLE: 'Thanks for signing up - Email subscriptions' })
   },
   authenticate(req, res) {
     user.authenticate(req.query.id).then(result => {

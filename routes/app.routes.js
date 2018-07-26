@@ -8,8 +8,6 @@ module.exports = function(app) {
   app.get('/thanks', signup_controller.confirmation);
   app.get('/authenticate', signup_controller.authenticate);
 
-  app.get('/topics', auth_middleware, topics_controller.read);
-  app.post('/topics', auth_middleware, topics_controller.create);
-  app.get('/topics/subscribed', auth_middleware, topics_controller.read_subscribed);
-  app.post('/topics/subscribed', auth_middleware, topics_controller.update_subscribed);
+  app.get('/topics/:type?', auth_middleware, topics_controller.read);
+  app.post('/topics/:type?', auth_middleware, topics_controller.update);
 }
