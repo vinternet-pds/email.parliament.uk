@@ -15,7 +15,7 @@ COPY package*.json /app/
 
 RUN npm install
 RUN mkdir -p public/_css
-RUN ./node_modules/.bin/node-sass--output-style compressed -o public/_css src/stylesheets
+CMD ./node_modules/.bin/node-sass--output-style compressed -o public/_css src/stylesheets
 
 ADD . /app/
 
