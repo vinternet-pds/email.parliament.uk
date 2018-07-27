@@ -1,4 +1,5 @@
 extends ../layouts/master.pug
+include ../mixins/tabs.pug
 
 block content
   #content.section--primary(tabindex='0')
@@ -7,12 +8,7 @@ block content
         small Email preferences
         span Manage your subscriptions
         span.context Edit the email updates you get from us
-  section.section--wide
-    .container
-      ul.list--tab
-        li.active Your subscriptions
-        li
-          a(href='/topics') All available subscriptions
+  +tabs('subscribed')
   section.section--wide
     .container.flex
       if TOPICS.length

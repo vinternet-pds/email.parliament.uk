@@ -1,0 +1,19 @@
+mixin tabs(active)
+  section.section--wide
+    .container
+      ul.list--tab
+        if active == 'subscribed'
+          li.active Your subscriptions
+        else
+          li
+            a(href='/topics/subscribed') Your subscriptions
+        if active == 'all'
+          li.active All available subscriptions
+        else
+          li
+            a(href='/topics') All available subscriptions
+        if active == 'user_details'
+          li.active Manage your settings and personal details
+        else
+          li
+            a(href='/user') Manage your settings and personal details
