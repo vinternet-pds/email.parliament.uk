@@ -26,7 +26,7 @@ block content
                 li
                   .list--details
                     .input-group__verbose
-                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
-                      label(for=val.Code)= val.Name
+                      input(type='checkbox', value=val.id, name="interests[]", id=val.id)
+                      label(for=val.id)= val.title
       else
         p You aren’t currently subscribed to any emails.

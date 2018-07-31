@@ -29,27 +29,10 @@ block content
           h2#newsletters Newsletters
           fieldset
             ol.list--block
-              each val in TOPICS.newsletters
+              each val in TOPICS
                 li
                   .list--details
                     .input-group__verbose
-                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
-                      label(for=val.Code)= val.Name
-          h2#cu Committee updates
-          fieldset
-            ol.list--block
-              each val in TOPICS.committee
-                li
-                  .list--details
-                    .input-group__verbose
-                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
-                      label(for=val.Code)= val.Name
-          h2#bu Bill updates
-          fieldset
-            ol.list--block
-              each val in TOPICS.bill
-                li
-                  .list--details
-                    .input-group__verbose
-                      input(type='checkbox', value=val.Code, name=val.Code, id=val.Code)
-                      label(for=val.Code)= val.Name
+                      input(type='checkbox', value=val.id, name="interests[]", id=val.id)
+                      label(for=val.id)= val.title
+            button(type='submit').btn--primary Save changes
