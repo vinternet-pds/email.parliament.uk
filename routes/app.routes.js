@@ -1,5 +1,6 @@
-const signup_controller = require('../controllers/signup.controller.js');
-const topics_controller = require('../controllers/topics.controller.js');
+const signup_controller = require('../controllers/signup.controller.js'),
+      topics_controller = require('../controllers/topics.controller.js'),
+      auth_middleware = require('../middlewares/authentication.middleware.js');
 
 module.exports = function(app) {
   app.get('/', signup_controller.index);
@@ -7,8 +8,8 @@ module.exports = function(app) {
   app.get('/thanks', signup_controller.confirmation);
   app.get('/authenticate', signup_controller.authenticate);
 
-  app.get('/topics', topics_controller.read);
-  app.post('/topics', topics_controller.create);
-  app.get('/topics/subscribed', topics_controller.read_subscribed);
-  app.post('/topics/subscribed', topics_controller.update_subscribed);
+  app.get('/topics', auth_middleware, topics_controller.read);
+  app.post('/topics', auth_middleware, topics_controller.create);
+  app.get('/topics/subscribed', auth_middleware, topics_controller.read_subscribed);
+  app.post('/topics/subscribed', auth_middleware, topics_controller.update_subscribed);
 }

@@ -37,7 +37,7 @@ const controller = {
           message: errors.array()[i].msg
         });
       }
-      return res.render('index', { PAGE_TITLE: 'Email subscriptions', session: req.session });
+      return res.redirect('/');
     } else {
       req.session.email = req.body.email;
 
@@ -45,7 +45,7 @@ const controller = {
         req.session.errors.push({
           message: 'An error has occurred. Please try again.'
         });
-        return res.render('index', { PAGE_TITLE: 'Email subscriptions', session: req.session });
+        return res.redirect('/');
       });
     }
   },
@@ -56,8 +56,13 @@ const controller = {
     return res.render('thanks', { PAGE_TITLE: 'Thanks for signing up - Email subscriptions', session: req.session })
   },
   authenticate(req, res) {
-    user.authenticate(req.query.id).then(result => // TODO: set id and email in session
-    res.redirect('/topics')).catch(error => res.redirect('/'));
+    user.authenticate(req.query.id).then(result => {
+      req.session.user = result;
+      return res.redirect('/topics');
+    }).catch(error => {
+      req.session.errors.push({ 'message': 'No access.' });
+      return res.redirect('/');
+    });
   }
 };
 

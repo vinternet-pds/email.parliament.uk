@@ -3,23 +3,27 @@ const bodyParser = require('body-parser'),
       session    = require('express-session'),
       app        = express();
 
+let sessCookies = {};
+if(app.get('env') === 'production') {
+  app.set('trust proxy', 1);
+  sessCookies.secure = true;
+}
+
 const middlewares = [
   express.static('public'),
   bodyParser.urlencoded({ extended: true }),
   bodyParser.json(),
   session({
-    secret: process.env.APP_SECRET,
+    cookie: sessCookies,
+    name: 'sessionId',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    secret: process.env.APP_SECRET
   }),
-  (req, res, next) => {
-    req.session.errors = [];
-    next();
-  }
+  require('./middlewares/flash.middleware.js')
 ];
 
 app.use(middlewares);
-
 app.set('view engine', 'pug');
 
 app.locals = {
