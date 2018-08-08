@@ -1,0 +1,16 @@
+extends ../layouts/master.pug
+
+block content
+  #content.section--primary(tabindex='0')
+    .container
+      .block--border__bottom
+        h1
+          small Email preferences
+          span Remove your details
+        p.lead Would you like to remove your details from our system? If so, you will have to sign up again to get our email updates.
+        form(action='', method='post')
+          button.btn--primary--inverse(type='submit') Yes, delete me
+    .container
+      p
+        = 'If you’ve changed your mind or clicked this by mistake, '
+        a(href='/topics') go back and manage your subscriptions.

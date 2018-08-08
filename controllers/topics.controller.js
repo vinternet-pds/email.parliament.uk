@@ -15,7 +15,7 @@ const controller = {
         userObject.interests[req.body.interests[i]] = (req.params.type ? false : true);
       }
 
-      return user.update(userObject).then(() => res.redirect(redirect));
+      return user.update(req.session.user.email_address, userObject).then(() => res.redirect(redirect));
     }
 
     // Otherwise, just show the topics page again
