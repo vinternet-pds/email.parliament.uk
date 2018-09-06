@@ -56,7 +56,7 @@ checkout_to_release:
 	git checkout -b release $(REL_TAG)
 
 build: # Using the variables defined above, run `docker build`, tagging the image and passing in the required arguments.
-	docker build -t $(DATE)-$(IMAGE):$(REL_TAG) -t $(IMAGE):latest \
+	docker build -t $(IMAGE):$(DATE)-$(REL_TAG) -t $(IMAGE):latest \
 	--build-arg APP_SECRET=$(APP_SECRET) \
 	--build-arg MC_API_KEY=$(MC_API_KEY) \
 	--build-arg MC_LIST_ID=$(MC_LIST_ID) \
@@ -66,11 +66,11 @@ run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER
 	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE)
 
 push: # Push the Docker images we have build to the configured Docker repository (Run in GoCD to push the image to AWS)
-	docker push $(IMAGE):$(REL_TAG)
+	docker push $(IMAGE):$(DATE)-$(REL_TAG)
 	docker push $(IMAGE):latest
 
 rmi: # Remove local versions of our images.
-	docker rmi -f $(IMAGE):$(REL_TAG)
+	docker rmi -f $(IMAGE):$(DATE)-$(REL_TAG)
 	docker rmi -f $(IMAGE):latest
 	docker images -a | grep "^<none>" | awk '{print $3}' | xargs docker rmi || true
 
