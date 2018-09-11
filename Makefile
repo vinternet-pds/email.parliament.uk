@@ -56,7 +56,7 @@ checkout_to_release:
 	git checkout -b release $(REL_TAG)
 
 build: # Using the variables defined above, run `docker build`, tagging the image and passing in the required arguments.
-	docker build -t $(IMAGE):$(DATE)- Version $(REL_TAG) -t $(IMAGE):latest \
+	docker build -t $(IMAGE):$(DATE)-$(REL_TAG) -t $(IMAGE):latest \
 	--build-arg APP_SECRET=$(APP_SECRET) \
 	--build-arg MC_API_KEY=$(MC_API_KEY) \
 	--build-arg MC_LIST_ID=$(MC_LIST_ID) \
