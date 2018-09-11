@@ -50,7 +50,7 @@ ORG=ukparliament
 REPO=email.parliament.uk
 LATEST_REL=$(GITHUB_API)/repos/$(ORG)/$(REPO)/releases
 REL_TAG=$(shell curl -s $(LATEST_REL) | jq -r '.[0].tag_name')
-DATE=$(shell  date +"%m/%d/%y %H:%M")
+DATE=$(shell  date +"%Y-%m-%dT%H:%M:%SZ")
 
 checkout_to_release:
 	git checkout -b release $(REL_TAG)
