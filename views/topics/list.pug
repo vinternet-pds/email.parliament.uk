@@ -13,21 +13,34 @@ block content
       .flex--1-4.categories
         h2 Categories
         ul
-          li
-            a(href='#newsletters').active Newsletters
-          li
-            a(href='#cu') Committee updates
-          li
-            a(href='#bu') Bill updates
+          each val in TOPICS.editorial
+            li
+              a(href='#').active= val.title
+          each val in TOPICS.automated
+            li
+              a(href='#').active= val.title
       .flex--3-4
         form(action='', method='post')
-          h2#newsletters Newsletters
-          fieldset
-            ol.list--block
-              each val in TOPICS
-                li
-                  .list--details
-                    .input-group__verbose
-                      input(type='checkbox', value=val.id, name="interests[]", id=val.id)
-                      label(for=val.id)= val.title
-            button(type='submit').btn--primary Save changes
+          each val in TOPICS.editorial
+            h2#id= val.title
+            fieldset
+              ol.list--block
+                each topic in val.items
+                  li
+                    .list--details
+                      .input-group__verbose
+                        input(type='checkbox', value=topic.id, name="interests[]", id=topic.id)
+                        label(for=topic.id)= topic.title
+              button(type='submit').btn--primary Save changes
+          each val in TOPICS.automated
+            h2#id= val.title
+            fieldset
+              ol.list--block
+                each topic in val.items
+                  li
+                    .list--details
+                      .input-group__verbose
+                        input(type='checkbox', value=topic.id, name="merge_fields[]", id=topic.id)
+                        label(for=topic.id)= topic.title
+                      p= topic.description
+              button(type='submit').btn--primary Save changes
