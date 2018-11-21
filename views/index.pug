@@ -4,15 +4,21 @@ block content
   #content.section--primary(tabindex='0')
     .container
       h1 Keep up to date
-      p.lead Get email updates about the work of UK Parliament that matters most to you. Be the first to know what is happening, how you can get involved, and what's coming up.
+
+      p Get email updates about the work of UK Parliament that matters most to you. Be the first to know what is happening, how you can get involved, and what's coming up.
       p UK Parliament will only send you emails about the topics you've signed up for. You can unsubscribe or change how often you receive emails any time.
+
       form(action='', method='post')
-        label(for='email')
-          strong Email address
-        if sessionErrors
-          for error in sessionErrors
-            p.message--error #{error.message}
-        input#email(type='text', name='email', required, autocapitalize='off' autocorrect='off')
-        button.btn--primary(type='submit') Sign up
-      p
-        a(href='https://www.parliament.uk/site-information/data-protection/uk-parliament-email-privacy-policy/') View our privacy policy
+        .input-wrapper
+          label(for='email') Email address
+
+          if sessionErrors
+            for error in sessionErrors
+              p.message--error #{error.message}
+
+          input#email(type='text', name='email', required, autocapitalize='off' autocorrect='off')
+
+          p
+            a(href='https://www.parliament.uk/site-information/data-protection/uk-parliament-email-privacy-policy/') View our privacy policy
+
+        button(class='btn--primary' type='submit') Sign up

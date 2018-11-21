@@ -1,16 +1,38 @@
-@import '../../node_modules/parliamentuk-pugin/src/stylesheets/settings/colours.scss';
-@import '../../node_modules/parliamentuk-pugin/src/stylesheets/settings/spacing.scss';
+/*--- Import Settings ---*/
+@import '../../node_modules/parliamentuk-pugin/src/stylesheets/settings/colours';
+@import '../../node_modules/parliamentuk-pugin/src/stylesheets/settings/spacing';
+@import '../../node_modules/parliamentuk-pugin/src/stylesheets/settings/mixins';
+
+/*--- Import Objects ---*/
+@import '../../node_modules/parliamentuk-pugin/src/stylesheets/objects/grid-settings';
+@import '../../node_modules/parliamentuk-pugin/src/stylesheets/objects/content-layouts';
+
+/*--- Import Elements ---*/
+@import '../../node_modules/parliamentuk-pugin/src/stylesheets/elements/form';
 
 .flex {
   display: flex;
+  flex-flow: column wrap;
+
+  @media (min-width: $large) {
+    flex-flow: row nowrap;
+  }
   &--1-4 {
     flex: 0 0 auto;
-    width: calc(30% - #{$base-spacing-unit-extra-large});
-    margin-right: $base-spacing-unit-extra-large;
+    width: 100%;
+
+    @media (min-width: $large) {
+      width: calc(30% - #{$base-spacing-unit-extra-large});
+      margin-right: $base-spacing-unit-extra-large;
+    }
   }
   &--3-4 {
     flex: 0 0 auto;
-    width: 70%;
+    width: 100%;
+
+    @media (min-width: $large) {
+      width: 70%;
+    }
   }
   h2 {
     margin-top: 0;
@@ -18,9 +40,12 @@
     padding-bottom: $base-spacing-unit-small;
     padding-top: $base-spacing-unit-small;
     background: $grey-5;
-    position: sticky;
-    top: 0;
-    z-index: 2;
+
+    @media (min-width: $large) {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
   }
   &-justify {
     justify-content: space-between;
@@ -33,28 +58,41 @@
 
 .categories {
   align-self: flex-start;
-  position: sticky;
-  top: 0;
+
+  @media (min-width: $large) {
+    position: sticky;
+    top: 0;
+  }
   h2 {
     margin-top: 0;
     margin-bottom: 0;
     padding-bottom: $base-spacing-unit-small;
     padding-top: $base-spacing-unit-small;
-    background: $grey-5;
   }
   ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     li {
       a {
-        display: block;
-        padding: $base-spacing-unit $base-spacing-unit-tiny;
-        margin-bottom: 1px;
-        &.active {
-          background: $grey-4;
-        }
+        margin-left: $base-spacing-unit-tiny;
+      }
+      &.active {
+        background: $grey-3;
       }
     }
+  }
+}
+
+ul > {
+  li.active {
+    background: $grey-3;
+  }
+}
+
+// Input wrappers
+
+.input-wrapper, .input-group__extended {
+  margin-bottom: $base-spacing-unit-extra-large;
+  border-bottom: solid 1px $grey-3;
+  & > :last-child {
+    margin-bottom: $base-spacing-unit-extra-large;
   }
 }

@@ -4,19 +4,18 @@ include ../mixins/tabs.pug
 block content
   #content.section--primary(tabindex='0')
     .container
-      h1
-        small Email preferences
+      h1 
         span Manage your subscriptions
         span.context Edit the email updates you get from us
-  +tabs('subscribed')
+
   section.section--wide
-    .container.flex
+    .container
+      .input-group__extended
+        +tabs('subscribed')
       if TOPICS.length
         form(action='', method='post')
-          .flex.flex-justify
+          .input-wrapper
             h2 Your subscriptions (#{TOPICS.length})
-            button(type="submit").btn--primary Unsubscribe
-          fieldset
             ol.list--block
               each val in TOPICS
                 li
@@ -24,5 +23,12 @@ block content
                     .input-group__verbose
                       input(type='checkbox', value=val.id, name="interests[]", id=val.id)
                       label(for=val.id)= val.title
+                    p 
+                      | Description text for 
+                      =val.title
+
+          button(class="btn--primary" type="submit") Unsubscribe
+
       else
-        p You aren’t currently subscribed to any emails.
+        .status--highlight
+          p You aren’t currently subscribed to any emails.
