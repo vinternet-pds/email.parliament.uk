@@ -5,9 +5,8 @@ block content
   #content.section--primary(tabindex='0')
     .container
       h1
-        small Email preferences
-        span Manage your subscriptions
-        span.context Edit the email updates you get from us
+        span Email subscriptions
+        span.context Choose the email updates you get from us.
   +tabs('subscribed')
   section.section--wide
     .container.flex
@@ -25,4 +24,4 @@ block content
                       input(type='checkbox', value=val.id, name="interests[]", id=val.id)
                       label(for=val.id)= val.title
       else
-        p You aren’t currently subscribed to any emails.
+        p You are not subscribed to any emails.

@@ -8,12 +8,12 @@ mixin tabs(active)
           li
             a(href='/topics/subscribed') Your subscriptions
         if active == 'all'
-          li.active All available subscriptions
+          li.active All subscriptions
         else
           li
-            a(href='/topics') All available subscriptions
+            a(href='/topics') All subscriptions
         if active == 'user_details'
-          li.active Manage your settings and personal details
+          li.active Your details
         else
           li
-            a(href='/user') Manage your settings and personal details
+            a(href='/user') Your details
