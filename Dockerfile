@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:10.13.0-alpine
 
 ARG APP_SECRET
 ARG MC_API_KEY
@@ -19,7 +19,7 @@ RUN mkdir -p public/_css
 
 CMD ./node_modules/.bin/node-sass --output-style compressed -o public/_css /src/stylesheets
 
-
+HEALTHCHECK --interval=5s --timeout=3s CMD curl --fail http://localhost:3000/health-check || exit 1
 
 EXPOSE 3000
 
