@@ -16,4 +16,9 @@ module.exports = function(app) {
   app.post('/user', auth_middleware, validator_middleware.emailValidator, user_controller.updateForm);
   app.get('/user/delete', auth_middleware, user_controller.delete);
   app.post('/user/delete', auth_middleware, user_controller.deleteConfirmation);
+
+  /**
+   * Healthcheck
+   */
+  app.get('/health-check', (req, res) => res.send('OK'));
 };
