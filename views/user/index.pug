@@ -5,14 +5,13 @@ block content
   #content.section--primary(tabindex='0')
     .container
       h1
-        small Email preferences
-        span Manage your settings and personal details
-        span.context Update your personal information and the frequency of our emails
+        span Your personal details
+        span.context Manage your email address and personal information.
   +tabs('user_details')
   section.section--wide
     .container
       .block--border__bottom
-        h2 Change your email address
+        h2 Your email address
         form(action='', method='post')
           fieldset
             label(for='email') Email address
@@ -22,5 +21,6 @@ block content
               input#email(type='email', name='email', required, autocapitalize='off' autocorrect='off', value=USER.email_address)
           button.btn--primary(type='submit') Change email address
       .block--border__bottom
-        p Would you like to remove your details from our system?
-        a.btn--ghost--primary(href='/user/delete') Yes, delete me
+        h2 Delete my details
+        p Would you like to delete your details from our system?
+        a.btn--ghost--primary(href='/user/delete') Yes, delete my details
