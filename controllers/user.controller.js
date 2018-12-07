@@ -5,26 +5,27 @@ const controller = {
   index(req, res) {
     return res.render('index', { PAGE_TITLE: 'Email subscriptions' });
   },
-  handleForm(req, res) {
+  async handleForm(req, res) {
+    let redirect = '/';
+    const { email } = req.body;
     const errors = validationResult(req);
 
     if(!errors.isEmpty()) {
-      for (let i = 0; i < errors.array().length; i++) {
-        req.session.errors.push({
-          message: errors.array()[i].msg
-        });
-      }
-      return res.redirect('/');
-    } else {
-      req.session.email = req.body.email;
-
-      user.create(req.body.email).then(() => res.redirect('/thanks')).catch(() => {
-        req.session.errors.push({
-          message: 'An error has occurred. Please try again.'
-        });
-        return res.redirect('/');
-      });
+      req.session.errors = errors.array().map(message => message.msg);
+      return res.redirect(redirect);
     }
+
+    try {
+      req.session.email = email;
+      await user.create(email);
+      redirect = '/thanks';
+    }
+    catch(e) {
+      console.log('Error on signup', JSON.stringify(e)); // For CloudWatch debugging
+      req.session.errors.push('An error has occurred. Please try again.');
+    }
+
+    return res.redirect(redirect);
   },
   confirmation(req, res) {
     if(!req.session.email) {
@@ -32,15 +33,20 @@ const controller = {
     }
     return res.render('thanks', { PAGE_TITLE: 'Thanks for signing up - Email subscriptions' })
   },
-  authenticate(req, res) {
+  async authenticate(req, res) {
     let redirect = req.query.return ? `/${req.query.return}` : '/topics';
-    user.authenticate(req.query.id).then(result => {
-      req.session.user = result;
-      return res.redirect(redirect);
-    }).catch(() => {
-      req.session.errors.push({ 'message': 'No access.' });
-      return res.redirect('/');
-    });
+
+    try {
+      const account = await user.authenticate(req.query.id);
+      req.session.user = account;
+    }
+    catch(e) {
+      console.log('Error on authentication', JSON.stringify(e)); // For CloudWatch debugging
+      req.session.errors.push(e);
+      redirect = '/';
+    }
+
+    return res.redirect(redirect);
   },
   update(req, res) {
     user.read(req.session.user.email_address).then(result => res.render('user/index', { PAGE_TITLE: 'Update your details - Email subscriptions', USER: result }));

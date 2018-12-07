@@ -11,7 +11,7 @@ block content
           strong Email address
         if sessionErrors
           for error in sessionErrors
-            p.message--error #{error.message}
+            p.message--error #{error}
         input#email(type='text', name='email', required, autocapitalize='off' autocorrect='off')
         button.btn--primary(type='submit') Sign up
       p
