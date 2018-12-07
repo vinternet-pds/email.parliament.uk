@@ -3,17 +3,18 @@ const crypto    = require('crypto'),
       mailchimp = new MailChimp(process.env.MC_API_KEY);
 
 const user = {
-  authenticate(id) {
-    const promise = new Promise((resolve, reject) => {
-      mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members?unique_email_id=${id}&fields=total_items,members.email_address,members.id`).then(result => {
-        if(result.total_items === 1) {
-          return resolve(result.members[0]);
-        } else {
-          return reject('User does not exist');
-        }
-      }).catch(error => reject(error));
-    });
-    return promise;
+  async authenticate(id) {
+    try {
+      const account = await mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members?unique_email_id=${id}&fields=total_items,members.email_address,members.id,members.unique_email_id`);
+      if(account.total_items === 1) {
+        return Promise.resolve(account.members.find(val => val.unique_email_id === id));
+      }
+    }
+    catch(e) {
+      return Promise.reject(e);
+    }
+
+    return Promise.reject('User does not exist');
   },
   create(email) {
     return mailchimp.post(`/lists/${process.env.MC_LIST_ID}/members`, {

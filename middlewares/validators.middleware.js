@@ -4,25 +4,25 @@ const { sanitizeBody } = require('express-validator/filter');
 
 const middleware = {
   emailValidator: [
-    check('email').not().isEmpty().withMessage('Email is required'),
-    check('email').isEmail().withMessage('Invalid email address entered'),
-    check('email').custom((value, { req }) => new Promise((resolve, reject) => {
-      // This saves an API call if previous validation doesn't pass
+    check('email').not().isEmpty().withMessage('An email address is required.'),
+    check('email').isEmail().withMessage('A valid email address is required.'),
+    check('email').custom((value, { req }) => {
       const errors = validationResult(req);
       if(errors.isEmpty()) {
-        // Check email address exists
-        user.read(value).then(() => // If user does exist, reject Promise
-        reject('An account exists with that email address')).catch(error => {
+        return user.read(value).then(() => Promise.reject('An account already exists with this email.')).catch(error => {
           if(error.status === 404) {
-            // If user doesn't exist, resolve Promise
-            return resolve();
+            // User does not exist - allow to proceed
+            return Promise.resolve();
+          } else {
+            // A different error ocurred - let the user know
+            return Promise.reject(error);
           }
-        });
+        })
       } else {
-        // If prior errors, don't run API call
-        return resolve();
+        // If errors already exist, save making an API call
+        return Promise.resolve();
       }
-    })),
+    }),
     sanitizeBody('email').escape().trim()
   ]
 }
