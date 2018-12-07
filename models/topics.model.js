@@ -4,6 +4,27 @@ const MailChimp = require('mailchimp-api-v3'),
       user = require('../models/user.model.js');
 
 const topics = {
+  convertMergeFieldsToObject(merge_fields, subscribeTo) {
+    return {
+      AEID: merge_fields.join(',')
+    };
+  },
+  convertInterestsArrayToObject(interests, subscribeTo) {
+    const object = {};
+    for (let i = 0; i < interests.length; i++) {
+      object[interests[i]] = subscribeTo;
+    }
+    return object;
+  },
+  flattenTopics(topics) {
+    let merged = [];
+    for(const key in topics) {
+      topics[key].forEach(item => {
+        merged = merged.concat(item.items);
+      });
+    }
+    return merged;
+  },
   cachedTopics: {
     last_updated: null,
     topics: []
@@ -110,25 +131,19 @@ const topics = {
     const preferences = await user.read(email);
 
     let allMergeFields = [];
-    for(var key in preferences.merge_fields) {
+    for(const key in preferences.merge_fields) {
       if(key.startsWith('AEID')) {
         allMergeFields = allMergeFields.concat(preferences.merge_fields[key].split(',').filter(val => val));
       }
     }
 
     if(getSubscribed) {
-      let merged = [];
-      for(const key in filterableTopics) {
-        filterableTopics[key].forEach(item => {
-          merged = merged.concat(item.items.filter(val => preferences.interests[val.id] || allMergeFields.includes(val.id)));
-        });
-      }
-      filterableTopics = merged;
+      filterableTopics = this.flattenTopics(filterableTopics);
+      return filterableTopics.filter(val => preferences.interests[val.id] || allMergeFields.includes(val.id));
     }
 
     return filterableTopics;
   }
 };
-
 
 module.exports = topics;

@@ -27,7 +27,7 @@ app.use(middlewares);
 app.set('view engine', 'pug');
 
 app.locals = {
-  PUGIN_VERSION: '1.11.6',
+  PUGIN_VERSION: '1.11.7',
   SITE_TITLE: 'UK Parliament'
 }
 
