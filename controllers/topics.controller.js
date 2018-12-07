@@ -4,24 +4,21 @@ const topics = require('../models/topics.model.js'),
 const controller = {
   update(req, res) {
     const redirect = req.params.type ? '/topics/subscribed' : '/topics';
+    const subscribingTo = req.params.type ? false : true;
     let userObject = {
-      email: req.session.user.email_address
+      email_address: req.session.user.email_address
     };
 
     if('merge_fields' in req.body) {
-      userObject.merge_fields = { AEID: req.body.merge_fields.join(',') };
+      userObject.merge_fields = topics.convertMergeFieldsToObject(req.body.merge_fields, subscribingTo);
     }
 
     if('interests' in req.body) {
-      userObject.interests = {};
-
-      for (let i = 0; i < req.body.interests.length; i++) {
-        userObject.interests[req.body.interests[i]] = (req.params.type ? false : true);
-      }
+      userObject.interests = topics.convertInterestsArrayToObject(req.body.interests, subscribingTo);
     }
 
     if(userObject.interests || userObject.merge_fields) {
-      return user.update(req.session.user.email_address, userObject).then(() => res.redirect(redirect));
+      return user.update(userObject).then(() => res.redirect(redirect));
     }
 
     // Otherwise, just show the topics page again

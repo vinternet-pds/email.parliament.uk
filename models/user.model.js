@@ -25,8 +25,8 @@ const user = {
   read(email) {
     return mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`);
   },
-  update(email, userObject) {
-    return mailchimp.put(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`, userObject);
+  update(userObject) {
+    return mailchimp.put(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(userObject.email_address).digest('hex')}`, userObject);
   },
   unsubscribe(email) {
     return mailchimp.patch(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`, { status: 'unsubscribed' });
