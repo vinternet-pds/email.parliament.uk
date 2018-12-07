@@ -1,6 +1,2 @@
-node_modules
-npm-debug.log
-.gitignore
-*.md
-aws_ecs
-Makefile
+.git
+node_modules/
