@@ -21,7 +21,10 @@ block content
                 li
                   .list--details
                     .input-group__verbose
-                      input(type='checkbox', value=val.id, name="interests[]", id=val.id)
+                      if val.aeid
+                        input(type='checkbox', value=val.id, name="merge_field[]", id=val.id)
+                      else
+                        input(type='checkbox', value=val.id, name="interests[]", id=val.id)
                       label(for=val.id)= val.title
       else
         p You are not subscribed to any emails.
