@@ -1,4 +1,4 @@
-.PHONY: build run dev test push scan-image rmi deploy-ecs airbrake css
+.PHONY: build run test push scan-image rmi deploy-ecs airbrake
 
 ##
 # Makefile used to build, test and (locally) run the email.parliament.uk project.
@@ -21,7 +21,7 @@ AWS_ACCOUNT_ID ?= $(or $(shell aws sts get-caller-identity --output text --query
 GO_PIPELINE_COUNTER ?= unknown
 
 # VERSION is used to tag the Docker images
-VERSION = 0.1.$(GO_PIPELINE_COUNTER)
+VERSION = 0.0.$(GO_PIPELINE_COUNTER)
 
 # ECS related variables used to build our image name
 # Cluster: list all clusters to update, separated by semicolons
@@ -36,9 +36,6 @@ CONTAINER_PORT = 3000
 
 # Host port used for mapping when running our Docker image.
 HOST_PORT = 80
-
-# variables
-NODE_SASS = ./node_modules/.bin/node-sass
 
 ##
 # MAKE TASKS
@@ -56,10 +53,13 @@ checkout_to_release:
 
 build: # Using the variables defined above, run `docker build`, tagging the image and passing in the required arguments.
 	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest \
-	--build-arg APP_SECRET=$(APP_SECRET) \
-	--build-arg MC_API_KEY=$(MC_API_KEY) \
-	--build-arg MC_LIST_ID=$(MC_LIST_ID) \
-	.
+		--build-arg APP_SECRET=$(APP_SECRET) \
+		--build-arg AWS_DYNAMODB_ENDPOINT=$(AWS_DYNAMODB_ENDPOINT) \
+		--build-arg AWS_DYNAMODB_REGION=$(AWS_DYNAMODB_REGION) \
+		--build-arg MC_API_KEY=$(MC_API_KEY) \
+		--build-arg MC_LIST_ID=$(MC_LIST_ID) \
+		--build-arg NODE_ENV=$(NODE_ENV) \
+		.
 
 run: # Run the Docker image we have created, mapping the HOST_PORT and CONTAINER_PORT
 	docker run --rm -p $(HOST_PORT):$(CONTAINER_PORT) $(IMAGE)

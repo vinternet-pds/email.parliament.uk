@@ -2,6 +2,8 @@ pipelines:
   parliament.uk-email:
     group: main
     label_template: "${COUNT}"
+    environment_variables:
+      NODE_ENV: development
     materials:
       parliament.uk-email-git:
         git: https://github.com/ukparliament/email.parliament.uk.git
