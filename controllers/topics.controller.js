@@ -8,16 +8,20 @@ const controller = {
     let userObject = {
       email_address: req.session.user.email_address
     };
+    let messages = [];
 
     if('merge_fields' in req.body) {
+      messages = messages.concat(req.body.merge_fields.map(val => topics.getTopicById(val)));
       userObject.merge_fields = await topics.convertMergeFieldsToObject(userObject.email_address, req.body.merge_fields, subscribingTo);
     }
 
     if('interests' in req.body) {
+      messages = messages.concat(req.body.interests.map(val => topics.getTopicById(val)));
       userObject.interests = topics.convertInterestsArrayToObject(req.body.interests, subscribingTo);
     }
 
     if(userObject.interests || userObject.merge_fields) {
+      req.session.messages = await topics.generateMessages(Promise.all(messages), subscribingTo);
       return user.update(userObject).then(() => res.redirect(redirect));
     }
 
