@@ -8,6 +8,10 @@ block content
         span Email subscriptions
         span.context Choose the email updates you get from us.
   +tabs('subscribed')
+  if messages.length
+    .section--wide
+      .container
+        .status--highlight.theme--mint--light #{messages}
   section.section--wide
     .container.flex
       if TOPICS.length

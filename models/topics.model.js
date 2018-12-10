@@ -4,6 +4,29 @@ const MailChimp = require('mailchimp-api-v3'),
       user = require('../models/user.model.js');
 
 const topics = {
+  async generateMessages(allPromises, subscribingTo) {
+    allPromises = await allPromises;
+    let string = '';
+    let language = {
+      action: subscribingTo ? 'subscribed' : 'unsubscribed',
+      preposition: subscribingTo ? 'to' : 'from'
+    };
+
+    if(allPromises.length === 1) {
+      string = allPromises.splice(0, 1).map(val => val.title).join(', ');
+    }
+    if(allPromises.length === 2) {
+      string = allPromises.splice(0, 2).map(val => val.title).join(' and ');
+    }
+    if(allPromises.length === 3) {
+      string = `${allPromises.splice(0, 2).map(val => val.title).join(', ')}, and ${allPromises.splice(0, 1).map(val => val.title)}`;
+    }
+    if(allPromises.length > 3) {
+      string = `${allPromises.splice(0, 3).map(val => val.title).join(', ')}, and ${allPromises.length} more`;
+    }
+
+    return `You've ${language.action} ${language.preposition} ${string}.`;
+  },
   async convertMergeFieldsToObject(email, merge_fields, subscribeTo) {
     const mergeFieldsObject = {};
     let subscribedAeids = (subscribeTo && subscribeTo !== 'pending') ? merge_fields : [];
