@@ -1,6 +1,6 @@
 pipelines:
   parliament.uk-email:
-    group: Main
+    group: main
     label_template: "${COUNT}"
     environment_variables:
       NODE_ENV: development
