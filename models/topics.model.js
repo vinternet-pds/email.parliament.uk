@@ -1,5 +1,5 @@
 const MailChimp = require('mailchimp-api-v3'),
-      aws = require('../dynamodb/helper.js'),
+      dynamodb = require('../dynamodb/dynamodb.js'),
       mailchimp = new MailChimp(process.env.MC_API_KEY),
       user = require('../models/user.model.js');
 
@@ -112,7 +112,7 @@ const topics = {
 
     if(this.cachedTopics.last_updated < yesterday) {
 
-      const automatedTopics = await this.getTopicsFromDynamoDB();
+      const automatedTopics = await dynamodb.getTopicsFromDynamoDB();
       const interestCategories = await this.getInterestCategories();
       const editorialInterests = await this.getInterestCategoryByIds(interestCategories);
 
@@ -152,28 +152,6 @@ const topics = {
     }
 
     return topics;
-  },
-  getTopicsFromDynamoDB(lastScan) {
-    this.topics = (lastScan && lastScan.Items) ? this.topics.concat(lastScan.Items) : [];
-
-    const assigned = Object.assign({}, { TableName: 'topics' });
-
-    assigned.ExpressionAttributeValues = {
-      ':a': {
-        S: '0'
-      }
-    };
-    assigned.FilterExpression = 'enabled <> :a';
-    assigned.Limit = 100;
-
-    if(lastScan !== undefined && lastScan.LastEvaluatedKey === undefined) {
-      return new Promise((resolve) => {
-        resolve(this.topics);
-      });
-    } else {
-      assigned.ExclusiveStartKey = (lastScan && lastScan.LastEvaluatedKey) ? lastScan.LastEvaluatedKey : null;
-      return aws.scan(assigned).promise().then((result) => this.getTopicsFromDynamoDB(result));
-    }
   },
   getInterestCategories() {
     return mailchimp.get(`/lists/${process.env.MC_LIST_ID}/interest-categories`).then(result => result.categories.map(val => ({
