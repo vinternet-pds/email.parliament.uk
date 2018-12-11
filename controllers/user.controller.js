@@ -53,9 +53,10 @@ const controller = {
 
       if(account.merge_fields.hasOwnProperty('AEID_PEND') && account.merge_fields.AEID_PEND) {
         account.merge_fields = await topics.convertMergeFieldsToObject(account.email_address, account.merge_fields.AEID_PEND.split(','), 'switch');
-        await user.update(account);
       }
 
+      account.status = 'subscribed';
+      await user.update(account);
     }
     catch(e) {
       console.log('Error on authentication', JSON.stringify(e)); // For CloudWatch debugging

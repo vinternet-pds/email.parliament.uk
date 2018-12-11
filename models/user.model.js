@@ -5,7 +5,7 @@ const crypto    = require('crypto'),
 const user = {
   async authenticate(id) {
     try {
-      const account = await mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members?unique_email_id=${id}&fields=total_items,members.email_address,members.id,members.unique_email_id,members.merge_fields`);
+      const account = await mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members?unique_email_id=${id}&fields=total_items,members.email_address,members.id,members.unique_email_id,members.merge_fields,members.status`);
       if(account.total_items === 1) {
         return Promise.resolve(account.members.find(val => val.unique_email_id === id));
       }
