@@ -1,8 +1,10 @@
 const aws = require('../dynamodb/helper.js');
 
 const dynamodb = {
+  topics: [],
   getTopicsFromDynamoDB(lastScan) {
     this.topics = (lastScan && lastScan.Items) ? this.topics.concat(lastScan.Items) : [];
+
     const assigned = Object.assign({}, { TableName: 'topics' });
     assigned.ExpressionAttributeValues = {
       ':a': {
@@ -11,6 +13,7 @@ const dynamodb = {
     };
     assigned.FilterExpression = 'enabled <> :a';
     assigned.Limit = 100;
+
     if(lastScan !== undefined && lastScan.LastEvaluatedKey === undefined) {
       return new Promise((resolve) => {
         resolve(this.topics);
