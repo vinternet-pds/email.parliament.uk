@@ -4,8 +4,8 @@ include ../mixins/tabs.pug
 block content
   #content.section--primary(tabindex='0')
     .container
-      h1
-        span Email subscriptions
+      h1 All subscriptions
+        span.context Email subscriptions
         span.context Choose the email updates you get from us.
   +tabs('all')
   if messages.length
