@@ -10,7 +10,7 @@ const controller = {
       topic = await topics.getTopicById(req.query.topic_id);
     }
 
-    return res.render('index', { PAGE_TITLE: 'Email subscriptions', TOPIC: topic || null });
+    return res.render('index', { PAGE_TITLE: 'Keep up to date', TOPIC: topic || null });
   },
   async handleForm(req, res) {
     let redirect = '/';
@@ -42,7 +42,7 @@ const controller = {
     if(!req.session.email) {
       return res.redirect('/');
     }
-    return res.render('thanks', { PAGE_TITLE: 'Thanks for signing up - Email subscriptions' })
+    return res.render('thanks', { PAGE_TITLE: 'Confirm your email address' });
   },
   async authenticate(req, res) {
     let redirect = req.query.return ? `/${req.query.return}` : '/topics';
@@ -67,7 +67,7 @@ const controller = {
     return res.redirect(redirect);
   },
   update(req, res) {
-    user.read(req.session.user.email_address).then(result => res.render('user/index', { PAGE_TITLE: 'Update your details - Email subscriptions', USER: result }));
+    user.read(req.session.user.email_address).then(result => res.render('user/index', { PAGE_TITLE: 'Your details', USER: result }));
   },
   updateForm(req, res) {
     const errors = validationResult(req);
@@ -90,12 +90,12 @@ const controller = {
     }
   },
   delete(req, res) {
-    return res.render('user/delete', { PAGE_TITLE: 'Are you sure? - Email subscriptions' });
+    return res.render('user/delete', { PAGE_TITLE: 'Delete my details' });
   },
   deleteConfirmation(req, res) {
     user.delete(req.session.user.email_address).then(() => {
       req.session.user = null;
-      return res.render('user/delete-confirmation', { PAGE_TITLE: 'Goodbye - Email subscriptions' });
+      return res.render('user/delete-confirmation', { PAGE_TITLE: 'We\'re deleting your details' });
     });
   }
 };

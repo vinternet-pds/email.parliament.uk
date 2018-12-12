@@ -31,7 +31,7 @@ const controller = {
   async read(req, res) {
     const getSubscribed = req.params.type ? true : false;
     const view = req.params.type ? 'topics/list-subscribed' : 'topics/list';
-    const title = req.params.type ? 'Your subscribed topics' : 'All topics';
+    const title = req.params.type ? 'Your subscriptions' : 'All subscriptions';
     const allTopics = await topics.getTopics();
     const currentUser = await user.read(req.session.user.email_address);
     const filteredTopics = await topics.filterTopicsByUserSubscription(req.session.user.email_address, getSubscribed, allTopics);

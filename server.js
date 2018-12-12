@@ -28,7 +28,7 @@ app.set('view engine', 'pug');
 
 app.locals = {
   PUGIN_VERSION: '1.11.8',
-  SITE_TITLE: 'UK Parliament'
+  SITE_TITLE: 'Email subscriptions - UK Parliament'
 }
 
 const routes = require('./routes/app.routes.js')(app);
