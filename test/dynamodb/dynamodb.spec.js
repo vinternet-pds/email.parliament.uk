@@ -27,4 +27,20 @@ describe('DynamoDB', () => {
     });
   });
 
+  describe('formatItem', () => {
+    it('returns a singular formatted item', async () => {
+      const items = await dynamodb.getTopicsFromDynamoDB();
+      const result = dynamodb.formatItem(items[0]);
+      return assert.deepEqual(result, expected.formatItem);
+    });
+  });
+
+  describe('formatItems', () => {
+    it('returns an array of formatted items', async () => {
+      const items = await dynamodb.getTopicsFromDynamoDB();
+      const result = dynamodb.formatItems(items);
+      return assert.deepEqual(result, expected.formatItems);
+    });
+  });
+
 });
