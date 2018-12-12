@@ -25,7 +25,7 @@ const topics = {
       string = allPromises.splice(0, 1).map(val => val.title).join(', ');
     }
     if(allPromises.length === 2) {
-      string = allPromises.splice(0, 2).map(val => val.title).join(' and ');
+      string = allPromises.splice(0, 2).map(val => val.title).join(', and ');
     }
     if(allPromises.length === 3) {
       string = `${allPromises.splice(0, 2).map(val => val.title).join(', ')}, and ${allPromises.splice(0, 1).map(val => val.title)}`;

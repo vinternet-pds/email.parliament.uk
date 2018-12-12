@@ -4,9 +4,9 @@ include ../mixins/tabs.pug
 block content
   #content.section--primary(tabindex='0')
     .container
-      h1
-        span Email subscriptions
-        span.context Choose the email updates you get from us.
+      h1 Your subscriptions
+        span.context Email subscriptions
+        span.context Change the email updates you get from us.
   +tabs('subscribed')
   if messages.length
     .section--wide
@@ -16,9 +16,7 @@ block content
     .container.flex
       if TOPICS.length
         form(action='', method='post')
-          .flex.flex-justify
-            h2 Your subscriptions (#{TOPICS.length})
-            button(type="submit").btn--primary Unsubscribe
+          button(type="submit").btn--primary Unsubscribe
           fieldset
             ol.list--block
               each val in TOPICS
@@ -31,4 +29,4 @@ block content
                         input(type='checkbox', value=val.id, name="interests[]", id=val.id)
                       label(for=val.id)= val.title
       else
-        p You are not subscribed to any emails.
+        p You're not subscribed to any emails.

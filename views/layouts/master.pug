@@ -20,6 +20,7 @@ html(lang='en')
   body
     noscript
       iframe(src='https://www.googletagmanager.com/ns.html?id=GTM-5P3ZKKS', width='0', height='0', style='display:none;visibility:hidden')
+    include ../../node_modules/parliamentuk-pugin/src/components/microsite-masthead.pug
     header
       .container
         a.uk_parliament(href='/', aria-label='UK Parliament')
@@ -30,8 +31,6 @@ html(lang='en')
       .container
         h2.logo UK Parliament
         ul.list
-          li
-            a(href='http://www.parliament.uk') Current Parliament.uk website
           li
             a(href='https://beta.parliament.uk/meta/cookie-policy') Cookie Policy
           li
