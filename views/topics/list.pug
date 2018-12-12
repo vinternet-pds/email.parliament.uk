@@ -19,14 +19,14 @@ block content
         ul
           each val in TOPICS.editorial
             li
-              a(href='#').active= val.title
+              a(href='#' + val.slug)= val.title
           each val in TOPICS.automated
             li
-              a(href='#').active= val.title
+              a(href='#' + val.slug)= val.title
       .flex--3-4
         form(action='', method='post')
           each val in TOPICS.editorial
-            h2#id= val.title
+            h2(id=`${val.slug}`)= val.title
             fieldset
               ol.list--block
                 each topic in val.items
@@ -37,7 +37,7 @@ block content
                         label(for=topic.id)= topic.title
               button(type='submit').btn--primary Save changes
           each val in TOPICS.automated
-            h2#id= val.title
+            h2(id=`${val.slug}`)= val.title
             fieldset
               ol.list--block
                 each topic in val.items

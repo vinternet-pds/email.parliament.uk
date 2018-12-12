@@ -1,7 +1,8 @@
 const MailChimp = require('mailchimp-api-v3'),
-      dynamodb = require('../dynamodb/dynamodb.js'),
+      slugify   = require('slugify'),
+      dynamodb  = require('../dynamodb/dynamodb.js'),
       mailchimp = new MailChimp(process.env.MC_API_KEY),
-      user = require('../models/user.model.js');
+      user      = require('../models/user.model.js');
 
 const topics = {
   sortAlphabetically(a, b) {
@@ -124,11 +125,14 @@ const topics = {
       const automatedTopics = await dynamodb.getTopicsFromDynamoDB();
       const interestCategories = await this.getInterestCategories();
       const editorialInterests = await this.getInterestCategoryByIds(interestCategories);
+      let committee_title = 'Committee updates';
+      let bill_title = 'Bill updates';
 
       topics = {
         automated: [
           {
-            title: 'Committee updates',
+            title: committee_title,
+            slug: slugify(committee_title).toLowerCase(),
             items: automatedTopics.filter(val => val.type.S === 'committee').map(item => ({
               id: item.topic_id.S,
               aeid: true,
@@ -138,7 +142,8 @@ const topics = {
             })).sort(this.sortAlphabetically)
           },
           {
-            title: 'Bill updates',
+            title: bill_title,
+            slug: slugify(bill_title),
             items: automatedTopics.filter(val => val.type.S === 'public_bill' || val.type.S === 'private_bill').map(item => ({
               id: item.topic_id.S,
               aeid: true,
@@ -150,6 +155,7 @@ const topics = {
         ],
         editorial: interestCategories.map(category => ({
           title: category.title,
+          slug: slugify(category.title).toLowerCase(),
           items: editorialInterests.find(interest => category.id == interest.category_id).interests.map(interest => ({
             id: interest.id,
             title: interest.name
