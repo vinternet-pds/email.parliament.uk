@@ -4,6 +4,15 @@ const MailChimp = require('mailchimp-api-v3'),
       user = require('../models/user.model.js');
 
 const topics = {
+  sortAlphabetically(a, b) {
+    if(a.title < b.title) {
+      return -1;
+    }
+    if(a.title > b.title) {
+      return 1;
+    }
+    return 0;
+  },
   async generateMessages(allPromises, subscribingTo) {
     allPromises = await allPromises;
     let string = '';
@@ -126,7 +135,7 @@ const topics = {
               title: item.title.S,
               description: item.description ? item.description.S : null,
               type: item.type ? item.type.S : null
-            }))
+            })).sort(this.sortAlphabetically)
           },
           {
             title: 'Bill updates',
@@ -136,7 +145,7 @@ const topics = {
               title: item.title.S,
               description: item.description ? item.description.S : null,
               type: item.type ? item.type.S : null
-            }))
+            })).sort(this.sortAlphabetically)
           }
         ],
         editorial: interestCategories.map(category => ({
@@ -144,7 +153,7 @@ const topics = {
           items: editorialInterests.find(interest => category.id == interest.category_id).interests.map(interest => ({
             id: interest.id,
             title: interest.name
-          }))
+          })).sort(this.sortAlphabetically)
         }))
       };
 
