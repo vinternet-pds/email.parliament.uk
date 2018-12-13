@@ -1,4 +1,5 @@
-const aws = require('../dynamodb/helper.js');
+const aws     = require('../dynamodb/helper.js'),
+      helpers = require('../helpers/helpers.js');
 
 const dynamodb = {
   topics: [],
@@ -22,6 +23,34 @@ const dynamodb = {
       assigned.ExclusiveStartKey = (lastScan && lastScan.LastEvaluatedKey) ? lastScan.LastEvaluatedKey : null;
       return aws.scan(assigned).promise().then((result) => this.getTopicsFromDynamoDB(result));
     }
+  },
+  formatItem(item) {
+    const hasDescription = (item.description && item.description.hasOwnProperty('S'));
+    return {
+      id: item.topic_id.S,
+      aeid: true,
+      description: hasDescription ? item.description.S : null,
+      title: item.title.S,
+      type: item.type ? item.type.S : null
+    };
+  },
+  formatItems(topics) {
+    const formatted = topics.map(dynamodb.formatItem);
+
+    return {
+      automated: [
+        {
+          id: 'committee',
+          title: 'Committee updates',
+          items: formatted.filter(val => val.type == 'committee').sort(helpers.sortAlphabetically),
+        },
+        {
+          id: 'bill',
+          title: 'Bill updates',
+          items: formatted.filter(val => val.type == 'public_bill' || val.type == 'private_bill').sort(helpers.sortAlphabetically)
+        }
+      ]
+    };
   }
 };
 

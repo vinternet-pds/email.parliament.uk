@@ -1,18 +1,13 @@
 const MailChimp = require('mailchimp-api-v3'),
-      slugify   = require('slugify'),
       dynamodb  = require('../dynamodb/dynamodb.js'),
+      helpers   = require('../helpers/helpers.js'),
       mailchimp = new MailChimp(process.env.MC_API_KEY),
       user      = require('../models/user.model.js');
 
 const topics = {
-  sortAlphabetically(a, b) {
-    if(a.title < b.title) {
-      return -1;
-    }
-    if(a.title > b.title) {
-      return 1;
-    }
-    return 0;
+  cachedTopics: {
+    last_updated: null,
+    topics: []
   },
   async generateMessages(allPromises, subscribingTo) {
     allPromises = await allPromises;
@@ -97,20 +92,6 @@ const topics = {
     }
     return merged;
   },
-  cachedTopics: {
-    last_updated: null,
-    topics: []
-  },
-  setCachedTopics(topics) {
-    this.cachedTopics = {
-      last_updated: new Date(),
-      topics
-    };
-    return this.cachedTopics;
-  },
-  getCachedTopics() {
-    return this.cachedTopics;
-  },
   async getTopicById(topic_id) {
     const allTopics = await this.getTopics();
     return this.flattenTopics(allTopics).find(val => val.id === topic_id);
@@ -118,91 +99,53 @@ const topics = {
   async getTopics() {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    let topics = this.cachedTopics.topics;
-
-    if(this.cachedTopics.last_updated < yesterday) {
-
-      const automatedTopics = await dynamodb.getTopicsFromDynamoDB();
-      const interestCategories = await this.getInterestCategories();
-      const editorialInterests = await this.getInterestCategoryByIds(interestCategories);
-      let committee_title = 'Committee updates';
-      let bill_title = 'Bill updates';
-
-      topics = {
-        automated: [
-          {
-            title: committee_title,
-            slug: slugify(committee_title).toLowerCase(),
-            items: automatedTopics.filter(val => val.type.S === 'committee').map(item => ({
-              id: item.topic_id.S,
-              aeid: true,
-              title: item.title.S,
-              description: item.description ? item.description.S : null,
-              type: item.type ? item.type.S : null
-            })).sort(this.sortAlphabetically)
-          },
-          {
-            title: bill_title,
-            slug: slugify(bill_title),
-            items: automatedTopics.filter(val => val.type.S === 'public_bill' || val.type.S === 'private_bill').map(item => ({
-              id: item.topic_id.S,
-              aeid: true,
-              title: item.title.S,
-              description: item.description ? item.description.S : null,
-              type: item.type ? item.type.S : null
-            })).sort(this.sortAlphabetically)
-          }
-        ],
-        editorial: interestCategories.map(category => ({
-          title: category.title,
-          slug: slugify(category.title).toLowerCase(),
-          items: editorialInterests.find(interest => category.id == interest.category_id).interests.map(interest => ({
-            id: interest.id,
-            title: interest.name
-          })).sort(this.sortAlphabetically)
-        }))
-      };
-
-      this.setCachedTopics(topics);
+    if(topics.cachedTopics.last_updated < yesterday) {
+      await topics.getTopicsFromSources();
     }
-
-    return topics;
+    return topics.cachedTopics.topics;
   },
-  getInterestCategories() {
-    return mailchimp.get(`/lists/${process.env.MC_LIST_ID}/interest-categories`).then(result => result.categories.map(val => ({
+  async getTopicsFromSources() {
+    const dynamoTopics = await dynamodb.getTopicsFromDynamoDB();
+    const mcInterestCategories = await topics.getInterestCategories();
+    const mcInterestCategoriesByIds = await topics.getInterestsFromInterestCategories(mcInterestCategories);
+    topics.cachedTopics.topics = Object.assign(dynamodb.formatItems(dynamoTopics), topics.formatInterests(mcInterestCategories, mcInterestCategoriesByIds));
+    topics.cachedTopics.last_updated = new Date();
+    return topics.cachedTopics.topics;
+  },
+  async getInterestCategories() {
+    const interests = await mailchimp.get(`/lists/${process.env.MC_LIST_ID}/interest-categories?count=50`);
+    return interests.categories.map(val => ({
       id: val.id,
       title: val.title
-    })));
+    }));
   },
-  getInterestCategoryById(id) {
+  getInterestsFromInterestCategory(id) {
     return mailchimp.get(`/lists/${process.env.MC_LIST_ID}/interest-categories/${id}/interests`);
   },
-  getInterestCategoryByIds(categories) {
-    const promises = [];
-
-    for (let i = 0; i < categories.length; i++) {
-      promises.push(this.getInterestCategoryById(categories[i].id));
-    }
-
-    return Promise.all(promises);
+  getInterestsFromInterestCategories(categories) {
+    return Promise.all(categories.map(val => topics.getInterestsFromInterestCategory(val.id)));
   },
-  async filterTopicsByUserSubscription(email, getSubscribed, filterableTopics) {
-    const preferences = await user.read(email);
-
-    let allMergeFields = [];
-    for(const key in preferences.merge_fields) {
-      if(key.startsWith('AEID') && !key.startsWith('AEID_PEND')) {
-        allMergeFields = allMergeFields.concat(preferences.merge_fields[key].split(',').filter(val => val));
+  formatInterests(interestCategories, mcInterestCategoriesByIds) {
+    return {
+      editorial: interestCategories.map(category => Object.assign(category, {
+        title: category.title,
+        items: mcInterestCategoriesByIds.find(subCategory => subCategory.category_id == category.id).interests.map(interest => ({
+          id: interest.id,
+          title: interest.name
+        })).sort(helpers.sortAlphabetically) || []
+      }))
+    };
+  },
+  filterTopicsByUserSubscription(topics, userSubscriptions, subscribed) {
+    let filterableTopics = JSON.parse(JSON.stringify(topics)); // Majorly hacky to deep clone the object.
+    for(const key in filterableTopics) {
+      for (let i = 0; i < filterableTopics[key].length; i++) {
+        filterableTopics[key][i].items = filterableTopics[key][i].items.filter(val => subscribed == userSubscriptions.includes(val.id));
       }
     }
 
-    if(getSubscribed) {
-      filterableTopics = this.flattenTopics(filterableTopics);
-      return filterableTopics.filter(val => preferences.interests[val.id] || allMergeFields.includes(val.id));
-    }
-
-    return filterableTopics;
-  }
+    return subscribed ? this.flattenTopics(filterableTopics) : filterableTopics;
+  },
 };
 
 module.exports = topics;

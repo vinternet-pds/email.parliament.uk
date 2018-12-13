@@ -1,12 +1,12 @@
-mixin tabs(active)
+mixin tabs(active, count = null)
   section.section--wide
     .container
       ul.list--tab
         if active == 'subscribed'
-          li.active Your subscriptions
+          li.active Your subscriptions (#{count})
         else
           li
-            a(href='/topics/subscribed') Your subscriptions
+            a(href='/topics/subscribed') Your subscriptions (#{count})
         if active == 'all'
           li.active All subscriptions
         else

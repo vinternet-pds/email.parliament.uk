@@ -44,6 +44,24 @@ const user = {
   },
   delete(email) {
     return mailchimp.delete(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`);
+  },
+  async getSubscriptions(email) {
+    const user = await this.read(email);
+    let preferences = [];
+
+    Object.keys(user.merge_fields).forEach(key => {
+      if(key.startsWith('AEID') && !key.startsWith('AEID_PEND')) {
+        preferences = preferences.concat(user.merge_fields[key].split(','));
+      }
+    });
+
+    Object.keys(user.interests).forEach(key => {
+      if(user.interests[key]) {
+        preferences.push(key);
+      }
+    });
+
+    return preferences.filter(val => val);
   }
 };
 
