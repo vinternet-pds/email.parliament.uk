@@ -11,13 +11,15 @@ block content
   section.section--wide
     .container
       .block--border__bottom
+        if messages.length
+          .status--highlight.theme--grey-4 #{messages}
         form(action='', method='post')
           fieldset
             label(for='email') Email
             if sessionErrors
               for error in sessionErrors
                 p.message--error #{error.message}
-              input#email(type='email', name='email', required, autocapitalize='off' autocorrect='off', value=USER.email_address)
+            input#email(type='email', name='email', required, autocapitalize='off' autocorrect='off', value=USER.email_address)
           button.btn--primary(type='submit') Change email
       .block--border__bottom
         p Would you like to delete your details from our system?
