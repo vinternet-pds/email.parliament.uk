@@ -66,8 +66,10 @@ const controller = {
 
     return res.redirect(redirect);
   },
-  update(req, res) {
-    user.read(req.session.user.email_address).then(result => res.render('user/index', { PAGE_TITLE: 'Your details', USER: result }));
+  async update(req, res) {
+    const account = await user.read(req.session.user.email_address);
+    const userSubscriptions = user.getSubscriptions(account);
+    return res.render('user/index', { PAGE_TITLE: 'Your details', USER: account, USER_SUBSCRIPTIONS_COUNT: userSubscriptions.length });
   },
   updateForm(req, res) {
     const errors = validationResult(req);
