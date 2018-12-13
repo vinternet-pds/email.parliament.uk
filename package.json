@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/ukparliament/email.parliament.uk#readme",
   "dependencies": {
-    "aws-sdk": "^2.374.0",
+    "aws-sdk": "^2.375.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-session": "^1.15.6",

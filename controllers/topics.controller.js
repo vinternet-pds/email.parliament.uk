@@ -32,11 +32,14 @@ const controller = {
     const getSubscribed = req.params.type ? true : false;
     const view = req.params.type ? 'topics/list-subscribed' : 'topics/list';
     const title = req.params.type ? 'Your subscriptions' : 'All subscriptions';
-    const userSubscriptions = await user.getSubscriptions(req.session.user.email_address);
+
+    const account = await user.read(req.session.user.email_address);
+    const userSubscriptions = await user.getSubscriptions(account);
+
     const allTopics = await topics.getTopics();
     const filtered = await topics.filterTopicsByUserSubscription(allTopics, userSubscriptions, getSubscribed);
 
-    return res.render(view, { PAGE_TITLE: title, TOPICS: filtered, USER_SUBSCRIPTIONS_COUNT: userSubscriptions.length || 0 });
+    return res.render(view, { PAGE_TITLE: title, TOPICS: filtered, USER_SUBSCRIPTIONS_COUNT: userSubscriptions.length });
   }
 };
 
