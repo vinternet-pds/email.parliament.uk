@@ -50,7 +50,7 @@ const controller = {
     try {
       const account = await user.authenticate(req.query.id);
       req.session.user = account;
-      if(account.merge_fields.hasOwnProperty('OLD_EMAIL')) {
+      if(account.merge_fields.hasOwnProperty('OLD_EMAIL') && account.merge_fields.OLD_EMAIL) {
         const old = await user.checkIfExists(account.merge_fields.OLD_EMAIL);
         account.merge_fields = old.merge_fields;
         account.interests = old.interests;
