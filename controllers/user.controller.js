@@ -50,17 +50,21 @@ const controller = {
     try {
       const account = await user.authenticate(req.query.id);
       req.session.user = account;
-
+      if(account.merge_fields.hasOwnProperty('OLD_EMAIL')) {
+        const old = await user.checkIfExists(account.merge_fields.OLD_EMAIL);
+        account.merge_fields = old.merge_fields;
+        account.interests = old.interests;
+        await user.delete(old.email_address);
+      }
       if(account.merge_fields.hasOwnProperty('AEID_PEND') && account.merge_fields.AEID_PEND) {
         account.merge_fields = await topics.convertMergeFieldsToObject(account.email_address, account.merge_fields.AEID_PEND.split(','), 'switch');
       }
-
       account.status = 'subscribed';
       await user.update(account);
     }
     catch(e) {
       console.log('Error on authentication', JSON.stringify(e)); // For CloudWatch debugging
-      req.session.errors.push(e);
+      req.session.errors.push('There has been an error. Please try again.');
       redirect = '/';
     }
 
@@ -69,7 +73,7 @@ const controller = {
   update(req, res) {
     user.read(req.session.user.email_address).then(result => res.render('user/index', { PAGE_TITLE: 'Your details', USER: result }));
   },
-  updateForm(req, res) {
+  async updateForm(req, res) {
     const errors = validationResult(req);
 
     // User hasn't actually changed their email address
@@ -86,7 +90,22 @@ const controller = {
       const userObject = {
         email_address: req.body.email
       };
-      user.update(req.session.user.email_address, userObject).then(result => res.redirect(`/authenticate?id=${result.unique_email_id}&return=user`));
+
+      try {
+        const check = await user.checkIfExists(req.body.email);
+        req.session.errors.push({
+          message: 'This email address is already subscribed.'
+        });
+      }
+      catch(e) {
+        userObject.merge_fields = {
+          OLD_EMAIL: req.session.user.email_address
+        }
+        const newUser = await user.create(userObject);
+        req.session.messages = `We've sent an email to ${req.body.email}. Click the link in the email to confirm your change of email address.`;
+      }
+
+      return res.redirect('/user');
     }
   },
   delete(req, res) {
