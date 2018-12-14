@@ -20,6 +20,7 @@
   "dependencies": {
     "aws-sdk": "^2.375.0",
     "body-parser": "^1.18.3",
+    "connect-dynamodb": "^2.0.2",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.0",
