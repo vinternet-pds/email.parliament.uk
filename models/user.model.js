@@ -48,17 +48,21 @@ const user = {
   getSubscriptions(account) {
     let preferences = [];
 
-    Object.keys(account.merge_fields).forEach(key => {
-      if(key.startsWith('AEID') && !key.startsWith('AEID_PEND')) {
-        preferences = preferences.concat(account.merge_fields[key].split(','));
-      }
-    });
+    if(account.merge_fields) {
+      Object.keys(account.merge_fields).forEach(key => {
+        if(key.startsWith('AEID') && !key.startsWith('AEID_PEND')) {
+          preferences = preferences.concat(account.merge_fields[key].split(','));
+        }
+      });
+    }
 
-    Object.keys(account.interests).forEach(key => {
-      if(account.interests[key]) {
-        preferences.push(key);
-      }
-    });
+    if(account.interests) {
+      Object.keys(account.interests).forEach(key => {
+        if(account.interests[key]) {
+          preferences.push(key);
+        }
+      });
+    }
 
     return preferences.filter(val => val);
   }
