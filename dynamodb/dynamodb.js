@@ -40,6 +40,26 @@ const dynamodb = {
     return {
       automated: [
         {
+          id: 'debates',
+          title: 'Debates, questions, and what\'s on',
+          items: formatted.filter(val => val.type == 'debates').sort(helpers.sortAlphabetically)
+        },
+        {
+          id: 'news',
+          title: 'News',
+          items: formatted.filter(val => val.type == 'news').sort(helpers.sortAlphabetically)
+        },
+        {
+          id: 'research',
+          title: 'Research and publications',
+          items: formatted.filter(val => val.type == 'research').sort(helpers.sortAlphabetically)
+        },
+        {
+          id: 'accountability',
+          title: 'MPs\' and Lords\' accountability',
+          items: formatted.filter(val => val.type == 'accountability').sort(helpers.sortAlphabetically)
+        },
+        {
           id: 'committee',
           title: 'Committee updates',
           items: formatted.filter(val => val.type == 'committee').sort(helpers.sortAlphabetically),
