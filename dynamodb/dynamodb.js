@@ -67,7 +67,7 @@ const dynamodb = {
         {
           id: 'bill',
           title: 'Bill updates',
-          items: formatted.filter(val => val.type == 'public_bill' || val.type == 'private_bill').sort(helpers.sortAlphabetically)
+          items: formatted.filter(val => val.type == 'public_bill' || val.type == 'private_bill' || val.type == 'generic_bill').sort(helpers.sortAlphabetically)
         }
       ]
     };
