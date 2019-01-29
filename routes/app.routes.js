@@ -1,6 +1,7 @@
 const auth_middleware = require('../middlewares/authentication.middleware.js'),
-      user_controller = require('../controllers/user.controller.js'),
+      landing_controller = require('../controllers/landing.controller.js'),
       topics_controller = require('../controllers/topics.controller.js'),
+      user_controller = require('../controllers/user.controller.js'),
       validator_middleware = require('../middlewares/validators.middleware.js');
 
 module.exports = function(app) {
@@ -16,6 +17,14 @@ module.exports = function(app) {
   app.post('/user', auth_middleware, validator_middleware.emailValidator, user_controller.updateForm);
   app.get('/user/delete', auth_middleware, user_controller.delete);
   app.post('/user/delete', auth_middleware, user_controller.deleteConfirmation);
+
+  /**
+   * Extra landing pages
+   */
+  app.get('/manage', landing_controller.manage);
+  app.post('/manage', validator_middleware.emailValidator, user_controller.handleForm);
+  app.get('/unsubscribe', landing_controller.unsubscribe);
+  app.post('/unsubscribe', validator_middleware.emailValidator, landing_controller.handleUnsubscribe);
 
   /**
    * Healthcheck

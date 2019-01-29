@@ -1,0 +1,24 @@
+extends ../layouts/master.pug
+
+block content
+  #content.section--primary(tabindex='0')
+    .container
+      h1 Unsubscribe from all emails
+        span.context Email subscriptions
+      if MESSAGE
+        .status--highlight.theme--success #{MESSAGE}
+      if ERROR
+        .status--highlight.theme--warning #{ERROR}
+      p Enter your email address to unsubscribe from all email updates. Alternatively, you can
+        = ' '
+        a(href='/manage') manage your email subscriptions
+        = '.'
+      form(action='', method='post')
+        label(for='email') Email
+        if sessionErrors
+          for error in sessionErrors
+            p.message--error #{error}
+        input#email(type='text', name='email', required, autocapitalize='off' autocorrect='off')
+        button.btn--primary(type='submit') Unsubscribe
+      p
+        a(href='https://beta.parliament.uk/articles/8M7cA51O') Email privacy policy

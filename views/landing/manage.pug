@@ -1,0 +1,21 @@
+extends ../layouts/master.pug
+
+block content
+  #content.section--primary(tabindex='0')
+    .container
+      h1 Manage your subscriptions
+        span.context Email subscriptions
+      p Sign in to manage the email updates you get from us. Alternatively, you can
+        = ' '
+        a(href='/unsubscribe') unsubscribe from all emails
+        = '.'
+      form(action='', method='post')
+        label(for='email') Email
+        if sessionErrors
+          for error in sessionErrors
+            p.message--error #{error}
+        input#email(type='text', name='email', required, autocapitalize='off' autocorrect='off')
+        input(type='hidden', name='toManage', value='1')
+        button.btn--primary(type='submit') Sign in
+      p
+        a(href='https://beta.parliament.uk/articles/8M7cA51O') Email privacy policy
