@@ -20,6 +20,10 @@ const controller = {
       email_address: email
     };
 
+    if(req.body.toManage) {
+      redirect = '/manage';
+    }
+
     if(!errors.isEmpty()) {
       req.session.errors = errors.array().map(message => message.msg);
       return res.redirect(redirect);
