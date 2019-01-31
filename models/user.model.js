@@ -31,19 +31,19 @@ const user = {
   create(userObject) {
     // With `status` and `status_if_new` set to `pending`, it sends a double opt-in confirmation email to the address
     userObject = Object.assign(userObject, { status_if_new: 'pending', status: 'pending' });
-    return mailchimp.put(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(userObject.email_address).digest('hex')}`, userObject);
+    return mailchimp.put(`/lists/${process.env.MC_LIST_ID}/members/${user.getIdHash(userObject.email_address)}`, userObject);
   },
   read(email) {
-    return mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`);
+    return mailchimp.get(`/lists/${process.env.MC_LIST_ID}/members/${user.getIdHash(email)}`);
   },
   update(userObject) {
-    return mailchimp.put(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(userObject.email_address).digest('hex')}`, userObject);
+    return mailchimp.put(`/lists/${process.env.MC_LIST_ID}/members/${user.getIdHash(userObject.email_address)}`, userObject);
   },
   unsubscribe(email) {
-    return mailchimp.patch(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`, { status: 'unsubscribed' });
+    return mailchimp.patch(`/lists/${process.env.MC_LIST_ID}/members/${user.getIdHash(email)}`, { status: 'unsubscribed' });
   },
   delete(email) {
-    return mailchimp.delete(`/lists/${process.env.MC_LIST_ID}/members/${crypto.createHash('md5').update(email).digest('hex')}`);
+    return mailchimp.delete(`/lists/${process.env.MC_LIST_ID}/members/${user.getIdHash(email)}`);
   },
   getSubscriptions(account) {
     let preferences = [];
@@ -65,6 +65,9 @@ const user = {
     }
 
     return preferences.filter(val => val);
+  },
+  getIdHash(email) {
+    return crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
   }
 };
 
